@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000);
     }
 
-    // Particles/Falling Leaves effect generator
+    // Particles/Falling Hearts effect generator
     function startParticles() {
         const container = document.getElementById("particles-container");
         const particleCount = 20;
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (document.querySelectorAll(".petal-particle").length < 35) {
                 createPetal(container);
             }
-        }, 1200);
+        }, 1000);
     }
 
     function createPetal(container) {
@@ -130,32 +130,105 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Random styling properties
         const left = Math.random() * 100;
-        const size = Math.random() * 8 + 6; // 6px to 14px
+        const size = Math.random() * 10 + 16; // 16px to 26px (perfect size for heart vectors)
         const delay = Math.random() * 5;
-        const duration = Math.random() * 6 + 6; // 6s to 12s
+        const duration = Math.random() * 7 + 6; // 6s to 13s
         const rotation = Math.random() * 360;
         
-        // Gold tint varieties
-        const tints = ["#bfa37a", "#a88a5d", "#8e6f43", "#e6cca6"];
+        // Rose tint varieties with a touch of luxury gold
+        const tints = [
+            "#ff7597", "#ff4b72", "#e8436a", "#f9a8b9", "#ffb3c1", 
+            "#ff8da1", "#bfa37a", "#a88a5d", "#d4af37"
+        ];
         const randomTint = tints[Math.floor(Math.random() * tints.length)];
         
         petal.style.left = `${left}%`;
         petal.style.width = `${size}px`;
         petal.style.height = `${size}px`;
-        petal.style.backgroundColor = randomTint;
         petal.style.animationDelay = `${delay}s`;
         petal.style.animationDuration = `${duration}s`;
         petal.style.transform = `rotate(${rotation}deg)`;
         
-        // Set rounded shapes to mimic leaves
-        petal.style.borderRadius = "80% 0 85% 0";
+        // SVG Rose Heart HTML Structure
+        petal.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="${randomTint}" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        `;
+        
+        // Click / Touch pop effect trigger
+        petal.addEventListener("mousedown", (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            popHeart(petal, randomTint);
+        });
+
+        petal.addEventListener("touchstart", (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            popHeart(petal, randomTint);
+        }, { passive: false });
         
         container.appendChild(petal);
 
-        // Remove leaf after animation completes to avoid memory leak
+        // Remove petal after animation completes to avoid memory leak
         setTimeout(() => {
             petal.remove();
         }, (duration + delay) * 1000);
+    }
+
+    // Explode/Pop Action
+    function popHeart(petal, color) {
+        // Position coordinates of click
+        const rect = petal.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        // Spark explosion
+        createExplosion(x, y, color);
+        
+        // Remove element
+        petal.remove();
+    }
+
+    // Generate popping sparks
+    function createExplosion(x, y, color) {
+        const particleCount = 12;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement("div");
+            particle.classList.add("explosion-particle");
+            
+            // 40% of sparks are mini hearts, 60% are standard rounds
+            if (Math.random() < 0.4) {
+                particle.classList.add("explosion-heart");
+            }
+            
+            particle.style.backgroundColor = color;
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            
+            // Random angle and push distance
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 90 + 40; // 40px to 130px travel radius
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            
+            particle.style.setProperty("--tx", `${tx}px`);
+            particle.style.setProperty("--ty", `${ty}px`);
+            
+            // Random scaling
+            const size = Math.random() * 6 + 4; // 4px to 10px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            document.body.appendChild(particle);
+            
+            // Garbage collection
+            setTimeout(() => {
+                particle.remove();
+            }, 600);
+        }
     }
 
 });
