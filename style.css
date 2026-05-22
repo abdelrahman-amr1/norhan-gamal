@@ -67,19 +67,48 @@ body {
     100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(162, 131, 88, 0); }
 }
 
-@keyframes floatingPetals {
+@keyframes fallingSway1 {
     0% {
-        transform: translateY(-10vh) translateX(0) rotate(0deg);
+        transform: translateY(-8vh) translateX(0) rotate(0deg) rotateY(0deg);
         opacity: 0;
     }
-    10% {
-        opacity: 0.8;
-    }
-    90% {
-        opacity: 0.4;
-    }
+    10% { opacity: 0.95; }
+    30% { transform: translateY(30vh) translateX(-25px) rotate(45deg) rotateY(90deg); }
+    60% { transform: translateY(60vh) translateX(30px) rotate(135deg) rotateY(180deg); }
+    85% { opacity: 0.8; }
     100% {
-        transform: translateY(105vh) translateX(50px) rotate(360deg);
+        transform: translateY(105vh) translateX(-15px) rotate(220deg) rotateY(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes fallingSway2 {
+    0% {
+        transform: translateY(-8vh) translateX(0) rotate(0deg) rotateX(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.95; }
+    33% { transform: translateY(35vh) translateX(25px) rotate(-60deg) rotateX(120deg); }
+    66% { transform: translateY(70vh) translateX(-30px) rotate(-180deg) rotateX(240deg); }
+    85% { opacity: 0.8; }
+    100% {
+        transform: translateY(105vh) translateX(15px) rotate(-280deg) rotateX(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes fallingSway3 {
+    0% {
+        transform: translateY(-8vh) translateX(0) rotate(10deg) rotateZ(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.95; }
+    25% { transform: translateY(25vh) translateX(-20px) rotate(80deg) rotateZ(60deg); }
+    50% { transform: translateY(50vh) translateX(20px) rotate(160deg) rotateZ(180deg); }
+    75% { transform: translateY(75vh) translateX(-20px) rotate(240deg) rotateZ(300deg); }
+    85% { opacity: 0.8; }
+    100% {
+        transform: translateY(105vh) translateX(10px) rotate(320deg) rotateZ(360deg);
         opacity: 0;
     }
 }
@@ -253,51 +282,46 @@ body {
 
 .petal-particle {
     position: absolute;
-    width: 22px;
-    height: 22px;
-    opacity: 0.8;
-    animation: floatingPetals 9s linear infinite;
+    width: 24px;
+    height: 24px;
+    opacity: 0;
+    animation: fallingSway1 9s linear infinite;
     pointer-events: auto;
     cursor: pointer;
-    z-index: 2;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 5;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .petal-particle:hover {
-    transform: scale(1.3) rotate(15deg) !important;
+    transform: scale(1.4) rotate(20deg) !important;
+    filter: drop-shadow(0 4px 8px rgba(232, 67, 106, 0.3));
 }
 
 .petal-particle svg {
     display: block;
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06));
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.08));
+    transition: transform 0.2s ease;
 }
 
 /* Pop Explosion Particles */
 .explosion-particle {
     position: fixed;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 12px;
+    height: 12px;
     pointer-events: none;
     z-index: 9999;
-    animation: explode 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-}
-
-.explosion-heart {
-    border-radius: 0;
-    clip-path: path('M 12,21.35 L 10.55,20.03 C 5.4,15.36 2,12.28 2,8.5 C 2,5.42 4.42,3 7.5,3 C 9.24,3 10.91,3.81 12,5.09 C 13.09,3.81 14.76,3 16.5,3 C 19.58,3 22,5.42 22,8.5 C 22,12.28 18.6,15.36 13.45,20.03 L 12,21.35 Z');
-    transform-origin: center;
+    animation: explode 0.7s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
 }
 
 @keyframes explode {
     0% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
+        transform: translate(0, 0) scale(1.2) rotate(0deg);
         opacity: 1;
     }
     100% {
-        transform: translate(var(--tx), var(--ty)) scale(0) rotate(180deg);
+        transform: translate(var(--tx), var(--ty)) scale(0) rotate(275deg);
         opacity: 0;
     }
 }
